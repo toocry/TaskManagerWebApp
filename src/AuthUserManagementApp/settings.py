@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig', #! main app
-    'crispy_forms', #! crispy forms
-    'crispy_bootstrap5', #! crispy bootstrap5
+    #'crispy_forms', #! crispy forms
+    #'crispy_bootstrap5', #! crispy bootstrap5
 ]
 
 MIDDLEWARE = [
@@ -83,6 +83,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'tasks_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'tasks_db.sqlite3',
+    },
+    'users_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'users_db.sqlite3',
     }
 }
 

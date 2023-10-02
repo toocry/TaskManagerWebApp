@@ -22,17 +22,26 @@
                         <a class="nav-link" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/create-post">Post</a>
+                        <a class="nav-link" href="/create_post">Post</a>
                     </li>
                 </ul>
             </div>
 
             <div>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
-                    </li>
+                    <!-- if user is logged in-->
+                    {% if user.is_authenticated %}
+                        <span class="navbar-text">Logged in as User:{{user.username}}, Id:{{user.id}}</span>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                    {% endif %}
                 </ul>
+
             </div>
         </div>
     </nav>
