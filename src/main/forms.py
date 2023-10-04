@@ -7,13 +7,13 @@ from . models import CustomUserModel, TaskModel
 
 
 
-class RegisterForm():
-    email = forms.EmailField(required=True)
+class RegisterForm(UserCreationForm):
+    # email = forms.EmailField(required=True)
     
     # NOTE: what is Meta class
     class Meta:
         model = CustomUserModel
-        fields = ["username", "email", "password1", "password2"]
+        fields = ["username", "password1", "password2"]
 
 
 

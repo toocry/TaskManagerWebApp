@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 # from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from django.contrib.admin.models import LogEntry
+# from django.contrib.admin.models import LogEntry
 
 
 # Create your models here.
@@ -49,7 +49,7 @@ class TaskModel(models.Model):
     author = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=1000)
-    status = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -19,16 +19,17 @@ def home(request):
 
 @login_required(login_url='login/')
 def create_post(request):
-    template = 'main/create_post.html'
+    template = 'main/create_task.html'
     # NOTE: if request is POST(which is submitting the post to db), then get the data from the form and fill the PostForm with the data
     if(request.method == 'POST'):
         form = TaskForm(request.POST)
         if form.is_valid():
             #NOTE: incomplete form -> commit=False
-            post = form.save(commit=False)
+            task = form.save(commit=False)
             #NOTE: add the task creator as the author of Task
-            post.author = request.user
-            post.save()
+            task.status = False
+            task.author = request.user
+            task.save()
             return redirect('home')
 
     else:
@@ -36,7 +37,7 @@ def create_post(request):
 
     return render(request, template, {"form":form})
 
-
+#NOTE: i need to save the status of the task in the db as well
 
 
 """

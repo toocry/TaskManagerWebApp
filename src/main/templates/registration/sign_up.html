@@ -5,11 +5,11 @@
         <form method="post">
             {% csrf_token %}
             <!--!Crispy form for displaying the form-->
-            {{ form.as_table}}
+            {{ form.as_p}}
             
-            <p>Already registered? Login<a href="/login">Login</a></p>
+            <p>Already registered? Login<a href="/login"> Login</a></p>
 
             <!--!Submit button-->
-            <button type="submit" class="btn btn-success">Sign Up</button>
+            <button type="submit" class="btn">Sign Up</button>
         </form>
     {% endblock %}
