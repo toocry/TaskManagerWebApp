@@ -27,11 +27,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# DATABASE_ROUTERS = [
+#     'main.routers.database_router.DbRouter',
+# ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+# CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Application definition
+AUTH_USER_MODEL = "main.CustomUserModel" #! custom user model
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,14 +90,16 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'tasks_db': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'tasks_db.sqlite3',
-    },
-    'users_db': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'users_db.sqlite3',
-    }
+    # 'main_customusermodel': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'main_customusermodel_db.sqlite3',
+    # }
+    # "customers": {
+    #     "NAME": "customer_data",
+    #     "ENGINE": "django.db.backends.mysql",
+    #     "USER": "mysql_cust",
+    #     "PASSWORD": "veryPriv@ate",
+    # },
 }
 
 

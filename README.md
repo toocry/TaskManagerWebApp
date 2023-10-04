@@ -8,8 +8,8 @@ This is a simple authentication system built with Django. It has the following f
 * Password reset
 * Email verification
 * User account activation
-* User account deactivation
-* User account deletion
+* User account deactivation [in progress]
+* User account deletion [in progress]
 
 <!-- ## Installation
 1. Clone the repository

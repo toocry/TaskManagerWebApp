@@ -1,17 +1,18 @@
 
 from django import forms
+# import UsercreationForm
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-#from .models import Task, User 
-from .models import Post
+# from django.contrib.auth 
+from . models import CustomUserModel, TaskModel
 
 
-class RegisterForm(UserCreationForm):
+
+class RegisterForm():
     email = forms.EmailField(required=True)
     
     # NOTE: what is Meta class
     class Meta:
-        model = User
+        model = CustomUserModel
         fields = ["username", "email", "password1", "password2"]
 
 
@@ -22,8 +23,14 @@ class RegisterForm(UserCreationForm):
 
 #NOTE: using ModelForm which is subclas of Form, because it is directly CONNECTED/MAPPED to the database
 # otherwise could use forms.Form
-class PostForm(forms.ModelForm):
+# class PostForm(forms.ModelForm):
+#     class Meta:
+#         model = Post
+#         fields = ["title", "description"]
+
+
+class TaskForm(forms.ModelForm):
     class Meta:
-        model = Post
+        model = TaskModel
         fields = ["title", "description"]
 
