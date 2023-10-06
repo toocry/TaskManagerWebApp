@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from . forms import TaskForm, RegisterForm
 # Create your views here.
+from django.http import JsonResponse
+# from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required 
 from django.contrib.auth import login
 from . models import TaskModel, CustomUserModel
@@ -12,13 +14,13 @@ from . models import TaskModel, CustomUserModel
 
 @login_required(login_url='login/')
 def home(request):
-    posts = TaskModel.objects.all()
+    tasks = TaskModel.objects.filter(author=request.user)
     
-    return render(request, 'main/home.html', {"posts":posts})
+    return render(request, 'main/home.html', {"tasks":tasks})
 
 
 @login_required(login_url='login/')
-def create_post(request):
+def create_task(request):
     template = 'main/create_task.html'
     # NOTE: if request is POST(which is submitting the post to db), then get the data from the form and fill the PostForm with the data
     if(request.method == 'POST'):
@@ -59,3 +61,44 @@ def sign_up(request):
         form = RegisterForm()
 
     return render(request, template, {"form":form})
+
+
+@login_required(login_url='login/')
+def delete_task(request):
+    # task = TaskModel.objects.get(pk=task_id)
+    # task.delete()
+    # return redirect('home')
+    pass
+def update_task(request):
+    # task = TaskModel.objects.get(pk=task_id)
+    # form = TaskForm(instance=task)
+    # if(request.method == 'POST'):
+    #     form = TaskForm(request.POST, instance=task)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('home')
+    # return render(request, 'main/update_task.html', {"form":form})
+    pass
+
+#@login_required(login_url='login/')
+def complete_task(request):
+    # parse body of post request and retrieve the task_id
+    task_id = request.POST.get('task_id')
+    # get the task from db
+    task = TaskModel.objects.get(pk=task_id)
+    # change the status of the task
+    if task.completed == True:
+        task.completed = False
+    else:
+        task.completed = True
+    # save the task
+    task.save()
+    #send success response
+    return JsonResponse({"success":True})
+
+    
+
+    
+    
+    
+

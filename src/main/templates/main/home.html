@@ -1,78 +1,101 @@
+{% extends 'main/base.html' %}
 
+{% block content %}
 
-{% load static %}
+    {% csrf_token %}
+    <style>
+        /* Define CSS styles for the table and done box */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        .done-box {
+            width: 20px;
+            height: 20px;
+            background-color: gray; /* Default color */
+            cursor: pointer;
+        }
+        .done {
+            background-color: green; /* Color when marked as done */
+        }
+    </style>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <!-- !NOTE: style and js scripts is not including NEED to fix-->
-    <link rel="stylesheet" type="text/css" href="{% static 'main/css/custom.css' %}">>
-    <!-- <script type="text/javascript" src="{% static 'main/js/custom.js' %}"></script> -->
-    <title>Home</title>
     
+    <table>
+        
+        <tr>
+            <th>Username</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Posted On</th>
+            <th>Done</th>
+        </tr>
 
-
-
-</head>
-<body>
-
-    {% block content %}
-       
-        <div class="table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Created At</th>
-                        <th>Done</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for task in tasks %}
-                    <tr>
-                        <td>
-                            <strong>
-                            Username: {{task.user.username}}
-                            <br>
-                            User Id: {{task.user.id}}
-                        </strong>
-                </td>
-                <td>{{task.title}}</td>
-                <td>{{task.description}}</td>
-                <td>Created At: {{task.created_at}}</td>
-                <td>
-                    {%if task.completed %}
-                        <div class="done-box">Done</div>
-                    {% else %}
-                        <div class="not-done-box">Not Done</div>
-                    {% endif %}
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        </div>
+        {% for task in tasks %}
+        <tr>
+            <td>
+                <strong>
+                    Username: {{ task.author }}
+                    <br>
+                    Id: {{ task.author.id }}
+                </strong>
+            </td>
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>Posted on: {{ task.created_at }}</td>
+            <td>
+                <div class="done-box done-box {% if task.completed %}done{% endif %}" data-task-id="{{task.id}}"></div>
+            </td>
+        </tr>
         {% endfor %}
-    {% endblock %}
+        
+    </table>
 
+    <a href="/logout">Logout</a>
+    <a href="/create_task">Create Task</a>
+<!-- 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" 
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
+        crossorigin="anonymous"></script>
+    <script> 
+        
+
+        function getToken(){
+            var token = "{{csrf_token}}";
+            return token;
+        }
 
         
 
-
-        
-
-
-
-
-
-
-
-
-
-    <script type="text/javascript" src="{% static 'main/js/custom.js' %}"></script>
-
-    
-
-</body>
-</html>
+        $(document).ready(function() {
+            // When the user clicks on a done box
+            $('.done-box').click(function() {
+              // Get the task id from the clicked element's data-task-id attribute
+              var taskId = $(this).data('task-id');
+          
+              // Get the CSRF token
+              var csrfToken = getToken();
+              var clickedElement = $(this);
+              // Send a POST request to the server
+              $.ajax({
+                type: 'POST',
+                url: 'complete_task',
+                data: {
+                  task_id: taskId,
+                  csrfmiddlewaretoken: csrfToken, // Include the CSRF token here
+                },
+                success: function() {
+                  // Change the color of the box
+                  clickedElement.toggleClass('done');
+                },
+              });
+            });
+          });
+    </script>
+{% endblock %}
