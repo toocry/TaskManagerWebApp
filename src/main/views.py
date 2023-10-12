@@ -19,6 +19,17 @@ class TaskList(APIView):
         tasks = TaskModel.objects.all()
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
+    
+#NOTE: API endpoint to display a sign up form
+class SignUpView(APIView):
+    pass
+
+
+#NOTE: API endpoint to display a sign up form
+class LoginView(APIView):
+    pass 
+
+
 
 
 
