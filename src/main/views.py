@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
-from . forms import TaskForm, RegisterForm
-# Create your views here.
-from django.http import JsonResponse
+
 # from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required 
 from django.contrib.auth import login
 from . models import TaskModel, CustomUserModel
-from . serializers import TaskSerializer
+from . serializers import TaskSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+# import authentication
+from django.contrib.auth import authenticate
+#import status
+from rest_framework import status
 
 
 
@@ -20,14 +22,49 @@ class TaskList(APIView):
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
     
+
 #NOTE: API endpoint to display a sign up form
 class SignUpView(APIView):
-    pass
+    def post(self,request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            login(request, user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors)
+
+        
 
 
 #NOTE: API endpoint to display a sign up form
 class LoginView(APIView):
-    pass 
+    def post(self, request):
+        #get the username and password from the request
+        username = request.data.get("username")
+        password = request.data.get("password")
+        #authenticate the user
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            #login the user
+            login(request, user)
+            return Response({"message":"Login Successful"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message":"Wrong username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+   
+#NOTE: API endpoint to create a task
+class CreateTaskView(APIView):
+    def post(self, request):
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            task = serializer.save(commit=False)
+            task.author = request.user
+            task.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
 
 
 

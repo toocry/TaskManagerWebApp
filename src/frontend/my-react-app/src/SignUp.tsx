@@ -16,6 +16,7 @@ function SignUp() {
 
     return (
         <div>
+            <h1>Sign Up Page</h1>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

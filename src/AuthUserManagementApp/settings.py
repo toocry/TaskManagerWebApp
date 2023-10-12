@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig', #! main app
     #'crispy_forms', #! crispy forms
     #'crispy_bootstrap5', #! crispy bootstrap5
+    'corsheaders' #! corsheaders
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'AuthUserManagementApp.urls'
@@ -77,6 +79,14 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
 ]
 
 WSGI_APPLICATION = 'AuthUserManagementApp.wsgi.application'
