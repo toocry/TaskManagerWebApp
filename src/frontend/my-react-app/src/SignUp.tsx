@@ -8,14 +8,38 @@ function SignUp() {
     const [password, setPassword] = useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
     // const [email, setEmail] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await handleRegister(username, password, passwordConfirmation);
+
+        // test case: password and passwordConfirmation are not the same
+        if (password !== passwordConfirmation) {
+            setErrorMessage('Passwords do not match');
+            return;
+        }
+        // test case: username, password, passwordConfirmation are empty
+        if (username === '' || password === '' || passwordConfirmation === '') {
+            setErrorMessage('Please fill in all fields');
+            return;
+        }
+
+        
+
+        try{
+            await handleRegister(username, password, passwordConfirmation);
+        } catch (err) {
+            console.error(err);
+        }
+
+
+
     };
 
     return (
         <div>
+            {/* error message here */}
+            {errorMessage && <h3>{errorMessage}</h3>}
             <h1>Sign Up Page</h1>
             <form onSubmit={handleSubmit}>
                 <input
