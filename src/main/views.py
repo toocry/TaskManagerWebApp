@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-
+# import requests
+# from django.http import response
 # from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required 
 from django.contrib.auth import login
@@ -11,6 +12,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 #import status
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 
 
 
@@ -20,24 +22,38 @@ class TaskList(APIView):
     def get(self, request):
         tasks = TaskModel.objects.all()
         serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        return response
     
 
+#!WORKING AS EXPECTED
 #NOTE: API endpoint to display a sign up form
 class SignUpView(APIView):
     def post(self,request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            token, _ = Token.objects.get_or_create(user=user)
             login(request, user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            response =  Response({"token": token.key, "message" : "Registration successfull", "user_data":serializer.data}, status=status.HTTP_201_CREATED)
+            # print("token is: {token.key} ")
+
+            # #print whole token
+            # print("{token}")        
+
+            # print("Response: {response}")
+
+            # print("Serializer View: {serializer.data}")
+            return response
         else:
-            print(serializer.errors)
-        return Response(serializer.errors)
+            error = serializer.errors
+            # print(error)
+            return error
+
 
         
 
-
+#!WORKING AS EXPECTED
 #NOTE: API endpoint to display a sign up form
 class LoginView(APIView):
     def post(self, request):
@@ -49,11 +65,18 @@ class LoginView(APIView):
         if user is not None:
             #login the user
             login(request, user)
-            return Response({"message":"Login Successful"}, status=status.HTTP_200_OK)
+            token, _ = Token.objects.get_or_create(user=user)
+            response = Response({"token": token.key, "message":"Login Successful"}, status=status.HTTP_200_OK)
+            # print("token is:" + token.key)
+            # print(response)
+            return response
         else:
-            return Response({"message":"Wrong username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({"message":"Wrong username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            # print(response)
+            return response
 
    
+#TODO: ....
 #NOTE: API endpoint to create a task
 class CreateTaskView(APIView):
     def post(self, request):

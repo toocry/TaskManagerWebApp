@@ -1,16 +1,20 @@
 import React, {useState, FormEvent} from 'react';
-import {handleRegister} from './api';
-import {Link} from 'react-router-dom';
+import {handleRegister, handleLogin} from './api';
+import {Link, useNavigate} from 'react-router-dom';
 
 function SignUp() {
     // register using 2 times password: 1 for password, 1 for confirmation
+    const navigate = useNavigate();
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
     // const [email, setEmail] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [authenticated, setAuthenticated] = useState<boolean>(
+        Boolean(localStorage.getItem('token') || false)
+    );
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // test case: password and passwordConfirmation are not the same
@@ -28,7 +32,17 @@ function SignUp() {
 
         try{
             await handleRegister(username, password, passwordConfirmation);
-        } catch (err) {
+
+            // if successfully registered, invoke login function
+            const response = await handleLogin(username, password);
+
+            if(authenticated){
+                navigate('/');
+            } else {
+                console.log(response);
+            }
+        } 
+        catch (err) {
             console.error(err);
         }
 
@@ -39,9 +53,9 @@ function SignUp() {
     return (
         <div>
             {/* error message here */}
-            {errorMessage && <h3>{errorMessage}</h3>}
+            <h3>{errorMessage}</h3>
             <h1>Sign Up Page</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmitRegister}>
                 <input
                     type="text"
                     placeholder="Username"
@@ -61,6 +75,8 @@ function SignUp() {
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
                 />
                 <button type="submit">Register</button>
+
+
             </form>
 
             <Link to="/login">Login</Link>

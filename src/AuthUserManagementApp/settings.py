@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'main.apps.MainConfig', #! main app
     #'crispy_forms', #! crispy forms
     #'crispy_bootstrap5', #! crispy bootstrap5
-    'corsheaders' #! corsheaders
+    'corsheaders', #! corsheaders
+    'rest_framework', #! rest_framework
+    'rest_framework.authtoken' #! rest_framework.authtoken
 ]
 
 MIDDLEWARE = [
