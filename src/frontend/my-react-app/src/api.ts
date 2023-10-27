@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { useEffect, useState } from 'react';
+import { TaskType } from './types';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 
@@ -9,36 +11,82 @@ export {handleRegister} from './apisignup';
 
 
 
+export const fetchTasks = async () => {
+    try {
+        const response = await axios.get('/api/tasks', {
+            headers: {
+                Authorization: `Token ${localStorage.getItem('token')}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 
-// make this Task interface available to other files
+
+export const useAuthentication = () => {
+    const [authenticated, setAuthenticated] = useState<boolean>(
+        Boolean(localStorage.getItem('token'))
+    );
+
+    useEffect (() => {
+        if (authenticated) {
+            console.log('AUTHENTICATED!!!');
+        }
+    }, [authenticated]);
+
+    return {authenticated, setAuthenticated};
+};
 
 
-// export interface Task {
-//     id: number;
-//     title: string;
-//     description: string;
-//     completed: boolean;
-// }
 
-// const handleTasksDisplay = async (): Promise<Task[]> => {
-//     try {
-//         // Make a GET request to the API endpoint
-//         const response: AxiosResponse<{ tasks: Task[] }> = await axios.get('/api/tasks' , {
-//             headers: {
-//                 Authorization: `Bearer ${localStorage.getItem('token')}`,  
-//             },
-//         });
 
-//         // Assuming the response contains an array of tasks
-//         const tasks: Task[] = response.data.tasks;
 
-//         // Do something with the tasks, such as displaying them in your UI
-//         return tasks;
-//     } catch (error) {
-//         console.error(error);
-//         throw error;
-//         // throw new Error('Something went wrong');
-//     }
-// };
+export const addTask = async (task: TaskType) => {
+    //post to /api/tasks with task.description and task.title
+    
+    try {
+        const response = await axios.post('/api/add_task', task, {
+            headers: {
+                Authorization: `Token ${localStorage.getItem('token')}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
 
+export const setComplete = async (taskId: Number) => {
+    //post to /api/tasks with task.description and task.title
+    try {
+        const response = await axios.post('/api/complete_task', {task_id: taskId}, {
+            headers: {
+                Authorization: `Token ${localStorage.getItem('token')}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export const deleteTask = async (taskId: Number) => {
+    //delete task from /api/delete_task
+    try {
+        const response = await axios.post('/api/delete_task', {task_id: taskId}, {
+            headers: {
+                Authorization: `Token ${localStorage.getItem('token')}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

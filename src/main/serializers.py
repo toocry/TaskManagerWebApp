@@ -11,6 +11,12 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ["title", "description"]
 
 
+class FullTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskModel
+        # all fields
+        fields = "__all__"
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUserModel

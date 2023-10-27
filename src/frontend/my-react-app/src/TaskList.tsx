@@ -1,50 +1,60 @@
-import React, { useEffect, useState } from 'react';
-// import { Task, handleTasksDisplay } from './api'; // Assuming you have a Task interface defined
 
-// function TaskListPage() {
-//     const [tasks, setTasks] = useState<Task[]>([]);
+  import React, { useEffect, useState } from 'react'
+  import { deleteTask, fetchTasks, setComplete } from './api'
+import axios from 'axios';
+  const TaskList = () => {
+    const [tasks, setTasks]  = useState(null);
+    
+    useEffect(() => {
+        const getTasks = async () => {
+            const tasksFromServer = await fetchTasks();
+            setTasks(tasksFromServer);
+            
+            console.log(tasks)
+        }
+        getTasks();
 
-//     useEffect(() => {
-//         // Retrieve and set tasks when the component mounts
-//         handleTasksDisplay()
-//             .then((data) => setTasks(data));
-//     }, []);
+        }, [])
+    
+    const toggleCompletion = async (taskId: number) => {
+        await setComplete(taskId);
 
-//     const toggleCompletion = (taskId: number) => {
-//         // Implement a function to update task completion status on API and locally
-//         // You can use a PUT request to update the task's completed field.
+
+        setTasks(tasks.map((task: any) => task.id === taskId ? {...task, completed: !task.completed} : task))
         
-//     };
+    }
+    const handleDelete = async (taskId: number) => {
+        await deleteTask(taskId);
+        setTasks(tasks.filter((task: any) => task.id !== taskId));
+    }
 
-//     return (
-//         <div>
-//             <h2>Task List</h2>
-//             <table>
-//                 <thead>
-//                     <tr>
-//                         <th>Title</th>
-//                         <th>Description</th>
-//                         <th>Completed</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     {tasks.map((task) => (
-//                         <tr key={task.id}>
-//                             <td>{task.title}</td>
-//                             <td>{task.description}</td>
-//                             <td>
-//                                 <input
-//                                     type="checkbox"
-//                                     checked={task.completed}
-//                                     onChange={() => toggleCompletion(task.id)}
-//                                 />
-//                             </td>
-//                         </tr>
-//                     ))}
-//                 </tbody>
-//             </table>
-//         </div>
-//     );
-// }
+    return (
+      <div>
+        <h3>🗒 TaskList</h3>
 
-// export default TaskListPage;
+
+            {tasks && tasks.map((task: any, i) => (
+            
+            <details>
+                <summary style={{display:"flex", justifyContent:"space-between", alignItems:'center'}}>
+                   
+                   
+                   
+                    <div> 
+                        <input type="checkbox" checked={task.completed} onChange={() => toggleCompletion(task.id)}/>
+                        <button onClick={() => handleDelete(task.id)} role="button" className="outline" style={{color:'red', borderColor:'red'}}>Delete</button> 
+                    </div>
+                    <div style={{textAlign: 'right'}}>{task.title}</div>
+                </summary>
+                <p>{task.description}</p>
+            </details>
+           
+            ))}
+    
+        
+    </div>
+
+    )
+  }
+  
+  export default TaskList

@@ -12,9 +12,10 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  // Navigate, 
+  Navigate, 
   // useNavigate
 } from "react-router-dom";
+import { useAuthentication } from './api'
 
 
 
@@ -40,16 +41,20 @@ import {
 function App() {
   
 
-  // const isAuthenticated: boolean = Boolean(localStorage.getItem('token'));
+  const {authenticated} = useAuthentication();
+  
 
   return (
     <Router>
       <Routes>
-        <Route path="/" Component={Home} />
+        <Route  path="/home" 
+                element = {authenticated ? <Home/> : <Navigate to="/login"/>} 
+        />
         
-        <Route path="/login" Component={Login}/>
+        
+        <Route path="/login" element={<Login/>}/>
 
-        <Route path="/signup" Component={SignUp}/>
+        <Route path="/signup" element={<SignUp/>}/>
 
         
       </Routes>

@@ -1,5 +1,5 @@
 import React, {useState, FormEvent} from 'react';
-import {handleRegister, handleLogin} from './api';
+import {handleRegister, handleLogin, useAuthentication} from './api';
 import {Link, useNavigate} from 'react-router-dom';
 
 function SignUp() {
@@ -10,9 +10,7 @@ function SignUp() {
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
     // const [email, setEmail] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [authenticated, setAuthenticated] = useState<boolean>(
-        Boolean(localStorage.getItem('token') || false)
-    );
+    const {authenticated, setAuthenticated} = useAuthentication();
 
     const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -31,15 +29,16 @@ function SignUp() {
         
 
         try{
-            await handleRegister(username, password, passwordConfirmation);
+            const success = await handleRegister(username, password, passwordConfirmation);
 
             // if successfully registered, invoke login function
-            const response = await handleLogin(username, password);
+            // const response = await handleLogin(username, password);
 
-            if(authenticated){
-                navigate('/');
+            if(success){
+                setAuthenticated(true);
+                navigate('/home');
             } else {
-                console.log(response);
+                console.log("fukc nigga");
             }
         } 
         catch (err) {

@@ -38,6 +38,11 @@ ALLOWED_HOSTS = []
 # Application definition
 AUTH_USER_MODEL = "main.CustomUserModel" #! custom user model
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',

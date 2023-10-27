@@ -10,6 +10,7 @@ const handleLogin = async (username: string, password: string): Promise<void> =>
     }
     catch (error) {
         console.error(error);
+        // throw error;
     }
 };
 
